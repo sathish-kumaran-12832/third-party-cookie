@@ -1,0 +1,11 @@
+<body>
+<script>
+	document.cookie="thirdparty=yes; Max-Age=3600; SameSite=None; Secure";
+
+	if (document.cookie.indexOf("thirdparty=yes") !== -1) {
+		window.parent.postMessage('MM:3PCsupported', '*');
+	} else {
+		window.parent.postMessage('MM:3PCunsupported', '*');
+	}
+</script>
+</body>
