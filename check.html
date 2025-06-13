@@ -1,20 +1,11 @@
 <body>
 <script>
-	function getOrCreateSyncId() {
-    // Use localStorage for persistence on this domain
-    let syncId = localStorage.getItem("sync_id");
+	document.cookie="thirdparty=yes; Max-Age=3600; SameSite=None; Secure";
 
-    if (!syncId) {
-      syncId = crypto.randomUUID();
-      localStorage.setItem("sync_id", syncId);
-    }
-
-    return syncId;
-  }
-
-  const syncId = getOrCreateSyncId();
-
-  // Send to parent
-  window.parent.postMessage({ syncId }, "*");
+	if (document.cookie.indexOf("thirdparty=yes") !== -1) {
+		window.parent.postMessage('MM:3PCsupported', '*');
+	} else {
+		window.parent.postMessage('MM:3PCunsupported', '*');
+	}
 </script>
 </body>
