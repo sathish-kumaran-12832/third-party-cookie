@@ -1,28 +1,18 @@
 <body>
 <script>
-	function generateUUID() {
-		return ([1e7]+-1e3+-4e3+-8e3+-1e11)
-	        .replace(/[018]/g, c =>
-	          (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-		);
-	}
-	try {
-	      // Attempt to set a third-party cookie
-	      document.cookie = "test3p=1; SameSite=None; Secure";
-	      const hasCookie = document.cookie.includes("test3p=1");
-	
-	      if (hasCookie) {
-	        // ✅ Third-party cookies work
-	        window.parent.postMessage({ cookieEnabled: true }, "*");
-	      } else {
-	        // ❌ Cookies blocked — fallback
-	        const syncId = generateUUID();
-	        window.parent.postMessage({ cookieEnabled: false, syncId }, "*");
-	      }
-	} catch (e) {
-		// ❌ Fallback if exception occurs
-		const syncId = generateUUID();
-		window.parent.postMessage({ cookieEnabled: false, syncId }, "*");
-	}
+	document.cookie = "check=abc123; SameSite=None; Secure";
+setTimeout(() => {
+  const hasCookie = document.cookie.includes("check=abc123");
+  const now = new Date().toISOString();
+
+  window.parent.postMessage(
+    {
+      cookieEnabled: hasCookie,
+      context: "At " + now + ", cookie=" + document.cookie,
+      partitionHint: "May be partitioned (Firefox TCP active)",
+    },
+    "*"
+  );
+}, 200);
 </script>
 </body>
