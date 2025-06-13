@@ -1,18 +1,20 @@
 <body>
 <script>
-	document.cookie = "check=abc123; SameSite=None; Secure";
-setTimeout(() => {
-  const hasCookie = document.cookie.includes("check=abc123");
-  const now = new Date().toISOString();
+	function getOrCreateSyncId() {
+    // Use localStorage for persistence on this domain
+    let syncId = localStorage.getItem("sync_id");
 
-  window.parent.postMessage(
-    {
-      cookieEnabled: hasCookie,
-      context: "At " + now + ", cookie=" + document.cookie,
-      partitionHint: "May be partitioned (Firefox TCP active)",
-    },
-    "*"
-  );
-}, 200);
+    if (!syncId) {
+      syncId = crypto.randomUUID();
+      localStorage.setItem("sync_id", syncId);
+    }
+
+    return syncId;
+  }
+
+  const syncId = getOrCreateSyncId();
+
+  // Send to parent
+  window.parent.postMessage({ syncId }, "*");
 </script>
 </body>
